@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1>error</h1>
+에러 터짐
 </body>
 </html>
