@@ -34,12 +34,6 @@ public class UserController {
 //		this.session = session;
 //	}
 	
-	
-	@GetMapping({"/" , "/home"})
-	public String home() {
-		return "home"; // 파일을 리턴함
-	}
-	
 	// http://localhost:8080/login -> login.jsp
 	// views/user/login.jsp
 	@GetMapping("/loginForm")

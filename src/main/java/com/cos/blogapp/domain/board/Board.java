@@ -1,10 +1,12 @@
 package com.cos.blogapp.domain.board;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 import com.cos.blogapp.domain.user.User;
@@ -23,9 +25,10 @@ public class Board {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // 시퀀스같은 것
 	private int id; // PK(자동증가 번호)
 	private String title; 
+	@Lob // 데이터 타입 longtext(4GB)
 	private String content;
 	
-	@JoinColumn(name = "userId")
-	@ManyToOne
+	@JoinColumn(name = "userId") // FK이름 지정
+	@ManyToOne(fetch = FetchType.EAGER) // FK
 	private User user;
 }
