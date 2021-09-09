@@ -21,18 +21,25 @@
 	</c:forEach>
 	<ul class="pagination d-flex justify-content-center">
 		<c:choose>
-			<c:when test="${boardsEntity.first }">
+			<c:when test="${boardsEntity.first}">
 				<li class="page-item disabled"><a class="page-link"
-					href="board?page=${boardsEntity.number - 1 }">Prev</a></li>
-				<li class="page-item"><a class="page-link"
-					href="/board?page=${param.page + 1 }">Next</a></li>
+					href="/board?page=${boardsEntity.number - 1}">Prev</a></li>
 			</c:when>
-			<c:when test="${boardsEntity.last }">
+			<c:otherwise>
 				<li class="page-item"><a class="page-link"
-					href="board?page=${boardsEntity.number - 1 }">Prev</a></li>
+					href="/board?page=${boardsEntity.number - 1}">Prev</a></li>
+			</c:otherwise>
+		</c:choose>
+
+		<c:choose>
+			<c:when test="${boardsEntity.last}">
 				<li class="page-item disabled"><a class="page-link"
-					href="/board?page=${param.page + 1 }">Next</a></li>
+					href="/board?page=${param.page + 1}">Next</a></li>
 			</c:when>
+			<c:otherwise>
+				<li class="page-item"><a class="page-link"
+					href="/board?page=${param.page + 1}">Next</a></li>
+			</c:otherwise>
 		</c:choose>
 		<!-- 전페이지에서 리다이렉트해서 두 가지의 el표현식 가능 -->
 	</ul>
