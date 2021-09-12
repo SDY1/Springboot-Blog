@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cos.blogapp.domain.user.User;
 import com.cos.blogapp.domain.user.UserRepository;
+import com.cos.blogapp.util.MyAlgorithm;
+import com.cos.blogapp.util.SHA;
 import com.cos.blogapp.util.Script;
 import com.cos.blogapp.web.dto.JoinReqDto;
 import com.cos.blogapp.web.dto.LoginReqDto;
@@ -63,12 +64,15 @@ public class UserController {
 			}
 			return Script.back(errorMap.toString());
 		}
+		String encPassword = SHA.encrypt(dto.getPassword(), MyAlgorithm.SHA256);
+		dto.setPassword(encPassword);
 //		2. DB -> 조회
 		User userEntity = userRepository.mLogin(dto.getUsername(), dto.getPassword());
 		if(userEntity == null) {
 //			return "redirect:/loginForm";
 			return Script.back("아이디 혹은 비밀번호를 잘못 입력하였습니다");
 		}else {
+			// 세션 날라가는 조건: 1. session.invaildate(), 2. 브라우저를 닫으면 날라감
 			session.setAttribute("principal", userEntity);  // principal:인증주체
 //			return "redirect:/"; // 만들어 놨으면 함수로 사용해라
 			return Script.href("/","로그인 성공");
@@ -95,6 +99,10 @@ public class UserController {
 			}
 			return Script.back(errorMap.toString());
 		}
+		
+		String encPassword = SHA.encrypt(dto.getPassword(), MyAlgorithm.SHA256); // enum을 사용한면 실수를 줄임(지정 타입만 넣을 수 있기 때문)
+		
+		dto.setPassword(encPassword);
 		userRepository.save(dto.toEntity());
 		
 		return Script.href("/loginForm");

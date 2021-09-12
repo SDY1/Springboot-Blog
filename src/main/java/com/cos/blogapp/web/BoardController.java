@@ -19,6 +19,7 @@ public class BoardController {
 	
 	@GetMapping("/board")
 	public String home (Model model, int page) {		
+		// 페이징 & 정렬	
 		PageRequest pageRequest = PageRequest.of(page, 3, Sort.by(Sort.Direction.DESC, "id"));
 		     
 		Page<Board> boardsEntity = boardRepository.findAll(pageRequest);
