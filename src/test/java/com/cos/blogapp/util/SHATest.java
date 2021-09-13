@@ -12,12 +12,12 @@ public class SHATest {
 		String rawPassword = "1234!" + salt;
 		// 1. SHA256 함수를 가진 클래스 객체 가져오기
 		MessageDigest md = null;
-		try {
+		try {  // new한 것을 재사용(싱글톤)
 			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} // new한 것을 재사용(싱글톤)
+		} 
 		// 2. 비밀번호 1234 -> SHA256 던지기
 		md.update(rawPassword.getBytes());
 		

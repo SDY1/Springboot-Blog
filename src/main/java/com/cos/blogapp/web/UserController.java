@@ -34,7 +34,11 @@ public class UserController {
 //		this.userRepository = userRepository;
 //		this.session = session;
 //	}
-	
+	@GetMapping("/logout")
+	public String logout() {
+		session.invalidate(); // 세션에 있는 모든 값 무효화(jsessionId에 있는 값 비우는 것)
+		return "redirect:/";
+	}
 	// http://localhost:8080/login -> login.jsp
 	// views/user/login.jsp
 	@GetMapping("/loginForm")

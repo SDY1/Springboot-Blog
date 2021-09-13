@@ -1,5 +1,6 @@
 package com.cos.blogapp.domain.board;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -24,6 +25,7 @@ public class Board {
 	@Id // primary
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // 시퀀스같은 것
 	private int id; // PK(자동증가 번호)
+	@Column(nullable = false, length = 50)
 	private String title; 
 	@Lob // 데이터 타입 longtext(4GB)
 	private String content;
