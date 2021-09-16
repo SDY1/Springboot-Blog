@@ -2,6 +2,7 @@ package com.cos.blogapp.web;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cos.blogapp.domain.board.Board;
 import com.cos.blogapp.domain.board.BoardRepository;
 import com.cos.blogapp.domain.user.User;
+import com.cos.blogapp.handler.ex.MyNotFoundException;
 import com.cos.blogapp.util.Script;
 import com.cos.blogapp.web.dto.BoardSaveReqDto;
 
@@ -45,7 +47,15 @@ public class BoardController {
 		
 		// 2. orElseThrow
 		Board boardEntity = boardRepository.findById(id)
-				.orElseThrow();
+//				.orElseThrow(new Supplier<MyNotFoundException>() { // 어떤 익셉션이 발생하든 내가 정의한 익셉션으로 던져줄 수 있음
+//					@Override
+//					public MyNotFoundException get() {
+//						return new MyNotFoundException(id + "를 찾을 수 없습니다");
+//					}
+//				}); 
+				// 람다식으로 변형
+				.orElseThrow(() -> new MyNotFoundException(id + "를 찾을 수 없습니다")
+				); // 중괄호 안넣으면 무조건 리턴(한줄 시)
 		
 		model.addAttribute("boardEntity", boardEntity);
 		return "board/detail";
