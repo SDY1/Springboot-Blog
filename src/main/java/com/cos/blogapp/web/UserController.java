@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -34,6 +35,13 @@ public class UserController {
 //		this.userRepository = userRepository;
 //		this.session = session;
 //	}
+	@GetMapping("/user/{id}")
+	public String userInfo(@PathVariable int id) {
+		// 기본은 userRepository.findById(id) 디비에서 가져와야 함
+		// 편법은 세션값을 가져올 수도 있음
+		
+		return "user/updateForm";
+	}
 	@GetMapping("/logout")
 	public String logout() {
 		session.invalidate(); // 세션에 있는 모든 값 무효화(jsessionId에 있는 값 비우는 것)
