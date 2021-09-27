@@ -25,6 +25,5 @@ public class GlobalExceptionHandler {
 //		System.out.println("오류 터짐" + e.getMessage());
 		return new CMRespDto<String>(-1, e.getMessage(), null); // fetch나 ajex같은 비동기요청은 json데이터응답 -> (자바스크립트에서)부분 리로드
 							 // 일반적 http 요청은  html응답 -> 전체 리로드
-		                     // 여기서는 text형식으로 응답
 	}
 }

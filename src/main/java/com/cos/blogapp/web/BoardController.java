@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cos.blogapp.domain.board.Board;
@@ -35,6 +37,32 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
 	private final BoardRepository boardRepository;
 	private final HttpSession session;
+	
+	@PutMapping("/board/{id}")                                                                         // JSON을 JAVA로 받아줌                  // 무조건 바인딩리절트는 dto옆에!
+	public @ResponseBody CMRespDto<String> update(@PathVariable int id, @Valid @RequestBody BoardSaveReqDto dto, BindingResult bindingResult){
+		User principal = (User)session.getAttribute("principal");
+		// 이러한 공통로직을 AOP처리로 따로 빼면 좋음(인증, 권한, 유효성 검사)
+		// 인증
+		// 권한
+		// 유효성 검사
+		
+		Board board = dto.toEntity(principal);
+		board.setId(id); // update의 핵심
+		
+		boardRepository.save(board);
+		return new CMRespDto<>(1, "업데이트 성공", null);
+	}
+	
+	// 모델의 접근을 안하면 인증/권한 굳이 필요없음(수정에서만 막아주면 됨)
+	@GetMapping("/board/{id}/updateForm")
+	public String boardUpdateForm(@PathVariable int id, Model model) {
+		// 게시글 정보를 가지고 가야함
+		Board boardEntity = boardRepository.findById(id)
+				.orElseThrow(() -> new MyNotFoundException(id + "번호의 게시글을 찾을 수 없습니다"));
+		
+		model.addAttribute("boardEntity",boardEntity); // 클라이언트에서 응답되면 데이터 사라짐
+		return "board/updateForm";
+	}
 	
 	// API(AJAX)요청
 	@DeleteMapping("/board/{id}")
