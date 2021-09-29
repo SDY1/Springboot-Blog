@@ -14,12 +14,14 @@ import com.cos.blogapp.web.dto.CMRespDto;
 public class GlobalExceptionHandler {
 	
 	// 어떤 익셉션이 발생했는지
+	// 일반요청
 	@ExceptionHandler(value = MyNotFoundException.class)
 	public @ResponseBody String error1(MyNotFoundException e) {
 //		System.out.println("오류 터짐" + e.getMessage());
 		return Script.href("/", e.getMessage());
 	}
 	
+	// fetch 요청(데이터를 응답 받아야 할 때)
 	@ExceptionHandler(value = MyAsyncNotFoundException.class)
 	public @ResponseBody CMRespDto<String> error2(MyAsyncNotFoundException e) {
 //		System.out.println("오류 터짐" + e.getMessage());

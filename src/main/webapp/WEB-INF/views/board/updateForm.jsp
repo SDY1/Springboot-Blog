@@ -4,7 +4,7 @@
 <%@ include file="../layout/header.jsp"%>
 <div class="container">
 	<form onsubmit="update(event, ${boardEntity.id})">
-		<!-- 엔터치려고 이렇게 씀 -->
+		<!-- 엔터치려고 submit 씀 -->
 		<div class="form-group">
 			<input id="title" type="text" value="${boardEntity.title }"
 				class="form-control" placeholder="Enter title">
@@ -15,9 +15,9 @@
 		<button type="submit" class="btn btn-primary">수정하기</button>
 	</form>
 </div>
-<script> /* 여기는 나중에 따로 빼기 때문에 el표현식을 넣으면 안됨 */
-	async function update(event, id){ // 여기에 ${boardEntity.id} 넣지 않음
-		event.preventDefault(); // submit 이벤트가 발생하지 않도록 함(갈때가 없으면 깜박거리는데 이를 막음)
+<script> /* 여기는 나중에 따로 빼기 때문에 el표현식을 넣으면 안됨(el 표현식은 jsp에서만 가능)*/
+	async function update(event, id){ // 여기에 ${boardEntity.id} 넣지 않음 
+		event.preventDefault(); // submit 이벤트가 발생하지 않도록 함(갈 곳이 없으면 깜박거리는데 이를 막음)
 		// 주소: PUT board/3
 		// UPDATE board SET title = ?, content = ? WHERE id =?
 		let boardUpdateDto  ={
@@ -41,7 +41,7 @@
 			alert("업데이트 성공");
 			location.href = "/board/"+id;
 		}else{
-			alert("업데이트 실패");
+			alert("업데이트 실패 : "+parseResponse.msg);
 		}
 	}
 	
