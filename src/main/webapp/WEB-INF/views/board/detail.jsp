@@ -48,13 +48,15 @@
    <hr />
 
    <div class="card">
-      <form>
+       <!--  댓글 쓰기 시작 -->
+      <form action="/board/${boardEntity.id }/comment" method="post">
          <div class="card-body">
-            <textarea id="reply-content" class="form-control" rows="1"></textarea>
+            <textarea name="content" class="form-control" rows="1"></textarea>
          </div>
          <div class="card-footer">
-            <button type="button" id="btn-reply-save" class="btn btn-primary">등록</button>
+            <button type="submit" id="btn-reply-save" class="btn btn-primary">등록</button>
          </div>
+          <!--  댓글 쓰기 끝 -->
       </form>
    </div>
    <br />

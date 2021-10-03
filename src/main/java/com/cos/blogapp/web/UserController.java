@@ -70,6 +70,7 @@ public class UserController {
 		userRepository.save(principal);
 		return new CMRespDto<>(1, "성공", null);
 	}	
+	
 	@GetMapping("/user/{id}")
 	public String userInfo(@PathVariable int id) {
 		// 기본은 userRepository.findById(id) 디비에서 가져와야 함

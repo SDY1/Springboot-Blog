@@ -23,12 +23,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cos.blogapp.domain.board.Board;
 import com.cos.blogapp.domain.board.BoardRepository;
+import com.cos.blogapp.domain.comment.Comment;
+import com.cos.blogapp.domain.comment.CommentRepository;
 import com.cos.blogapp.domain.user.User;
 import com.cos.blogapp.handler.ex.MyAsyncNotFoundException;
 import com.cos.blogapp.handler.ex.MyNotFoundException;
 import com.cos.blogapp.util.Script;
 import com.cos.blogapp.web.dto.BoardSaveReqDto;
 import com.cos.blogapp.web.dto.CMRespDto;
+import com.cos.blogapp.web.dto.CommentSaveReqDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,7 +39,29 @@ import lombok.RequiredArgsConstructor;
 @Controller // 컴퍼넌트 스캔(스프링) IoC
 public class BoardController {
 	private final BoardRepository boardRepository;
+	private final CommentRepository commentRepository;
 	private final HttpSession session;
+	
+	@PostMapping("/board/{boardId}/comment")
+	public String commentSave(@PathVariable int boardId, CommentSaveReqDto dto) {
+		// 1. DTO로 데이터 받기
+		// 2. Comment 객체 만들기(빈객체 생성)
+		Comment comment = new Comment();
+		
+		// 3. Comment 객체에 값 추가하기, id: X, content: DTO값, user: 세션값, board: boardId로 findById하기
+		User principal = (User)session.getAttribute("principal");
+		Board boardEntity = boardRepository.findById(boardId)
+				.orElseThrow(() -> new MyNotFoundException("해당 게시글을 찾을 수 없습니다"));
+		
+		comment.setContent(dto.getContent());
+		comment.setUser(principal);
+		comment.setBoard(boardEntity);
+		
+		// 4. save 하기
+		commentRepository.save(comment);
+		
+		return "redirect:/board/" +  boardId;
+	}
 	
 	@PutMapping("/board/{id}")                                                                         // JSON을 JAVA로 받아줌                  // 무조건 바인딩리절트는 dto옆에!
 	public @ResponseBody CMRespDto<String> update(@PathVariable int id, @Valid @RequestBody BoardSaveReqDto dto, BindingResult bindingResult){
