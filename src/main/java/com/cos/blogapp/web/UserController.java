@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cos.blogapp.domain.user.User;
 import com.cos.blogapp.domain.user.UserRepository;
 import com.cos.blogapp.handler.ex.MyAsyncNotFoundException;
+import com.cos.blogapp.service.UserService;
 import com.cos.blogapp.util.MyAlgorithm;
 import com.cos.blogapp.util.SHA;
 import com.cos.blogapp.util.Script;
@@ -33,8 +34,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor // 꼭 필요한 것을 생성 -> final붙여서 접근 가능
 public class UserController {
 	// @Autowired 자동주입
-	final private UserRepository userRepository;
 	final private HttpSession session;
+	final private UserService userService;
 	// DI
 //	public UserController(UserRepository userRepository, HttpSession session) {
 //		this.userRepository = userRepository;
@@ -62,12 +63,8 @@ public class UserController {
 		if(principal.getId() != id) {
 			throw new MyAsyncNotFoundException("회원정보를 수정할 권한이 없습니다");
 		}
+		userService.회원수정(principal, dto);
 		
-		// 핵심로직
-		principal.setEmail(dto.getEmail());
-		session.setAttribute("principal", principal); // 세션 값 변경
-		
-		userRepository.save(principal);
 		return new CMRespDto<>(1, "성공", null);
 	}	
 	
@@ -115,7 +112,7 @@ public class UserController {
 		String encPassword = SHA.encrypt(dto.getPassword(), MyAlgorithm.SHA256);
 		dto.setPassword(encPassword);
 //		2. DB -> 조회
-		User userEntity = userRepository.mLogin(dto.getUsername(), dto.getPassword());
+		User userEntity = userService.로그인(dto);
 		if(userEntity == null) {
 //			return "redirect:/loginForm";
 			return Script.back("아이디 혹은 비밀번호를 잘못 입력하였습니다");
@@ -148,10 +145,7 @@ public class UserController {
 			return Script.back(errorMap.toString());
 		}
 		
-		String encPassword = SHA.encrypt(dto.getPassword(), MyAlgorithm.SHA256); // enum을 사용한면 실수를 줄임(지정 타입만 넣을 수 있기 때문)
-		
-		dto.setPassword(encPassword);
-		userRepository.save(dto.toEntity());
+		userService.회원가입(dto);
 		
 		return Script.href("/loginForm");
 	}
