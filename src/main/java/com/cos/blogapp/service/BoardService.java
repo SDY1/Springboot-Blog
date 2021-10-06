@@ -1,14 +1,10 @@
 package com.cos.blogapp.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.FieldError;
 
 import com.cos.blogapp.domain.board.Board;
 import com.cos.blogapp.domain.board.BoardRepository;
@@ -51,11 +47,14 @@ public class BoardService {
 			throw new MyAsyncNotFoundException("해당 게시글의 주인이 아닙니다");
 		}
 
-		Board board = dto.toEntity(principal);
-		board.setId(id); // update의 핵심
-
-		boardRepository.save(board);
-	}
+//		Board board = dto.toEntity(principal);
+//		board.setId(id); // update의 핵심
+//
+//		boardRepository.save(board);
+		// 영속화된 데이터를 변경하면!
+		boardEntity.setTitle(dto.getTitle());
+		boardEntity.setContent(dto.getContent());
+	}  // 트랜젝션 종료(더티체킹)
 
 	// 이거는 여기있다고 좋아지는 건 없지만 형식상 이렇게 해줌
 	public Board 게시글수정페이지이동(int id) {

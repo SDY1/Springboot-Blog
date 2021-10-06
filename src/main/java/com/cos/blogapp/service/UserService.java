@@ -23,12 +23,15 @@ public class UserService {
 	@Transactional(rollbackFor = MyAsyncNotFoundException.class)
 	public void 회원수정(User principal, UserUpdateDto dto) {
 		// 핵심로직
-		principal.setEmail(dto.getEmail());
-
-		userRepository.save(principal);
-	}
+//		userRepository.save(principal);
+		User userEntity = userRepository.findById(principal.getId())
+				.orElseThrow(() -> new MyAsyncNotFoundException("회원정보를 찾을 수 없습니다"));
+		userEntity.setEmail(dto.getEmail());
+	} // 더티 체킹
 
 	public User 로그인(LoginReqDto dto) {
+		String encPassword = SHA.encrypt(dto.getPassword(), MyAlgorithm.SHA256);
+		dto.setPassword(encPassword);
 		return userRepository.mLogin(dto.getUsername(), dto.getPassword());
 	}
 

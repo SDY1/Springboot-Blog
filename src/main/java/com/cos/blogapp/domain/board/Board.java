@@ -1,5 +1,7 @@
 package com.cos.blogapp.domain.board;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
+import com.cos.blogapp.domain.comment.Comment;
 import com.cos.blogapp.domain.user.User;
 
 import lombok.AllArgsConstructor;

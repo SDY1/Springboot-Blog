@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cos.blogapp.domain.user.User;
-import com.cos.blogapp.domain.user.UserRepository;
 import com.cos.blogapp.handler.ex.MyAsyncNotFoundException;
 import com.cos.blogapp.service.UserService;
 import com.cos.blogapp.util.MyAlgorithm;
@@ -65,6 +64,10 @@ public class UserController {
 		}
 		userService.회원수정(principal, dto);
 		
+		// 세션 동기화 해주는 부분
+		principal.setEmail(dto.getEmail());
+		session.setAttribute("principal", principal); // 세션 값 변경
+		
 		return new CMRespDto<>(1, "성공", null);
 	}	
 	
@@ -109,8 +112,7 @@ public class UserController {
 			}
 			return Script.back(errorMap.toString());
 		}
-		String encPassword = SHA.encrypt(dto.getPassword(), MyAlgorithm.SHA256);
-		dto.setPassword(encPassword);
+
 //		2. DB -> 조회
 		User userEntity = userService.로그인(dto);
 		if(userEntity == null) {
