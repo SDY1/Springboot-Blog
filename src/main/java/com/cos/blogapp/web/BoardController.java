@@ -93,9 +93,10 @@ public class BoardController {
 	// 4. 디비에 접근을 해야하면 Model접근하기 orElse Model에 접근할 필요가 없음
 	@GetMapping("/board/{id}")
 	public String detail(@PathVariable int id, Model model) {
+		// Board 객체에 존재하는 것(Board(o), User(o), List<Comment>(x))
 		Board boardEntity = boardService.게시글상세보기(id);
 		model.addAttribute("boardEntity", boardEntity);
-		return "board/detail";
+		return "board/detail"; // ViewResolver
 	}
 
 	@PostMapping("/board") // 보드 모델에 저장할 것임
