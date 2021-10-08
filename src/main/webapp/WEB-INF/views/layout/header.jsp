@@ -23,6 +23,12 @@
 </head>
 <body>
 
+	<script>
+		// id만 적을 수 있다.
+		// 자바스크립트로 변경이 가능 -> 자바스크립트로 완벽하게 막을 수 없음
+		let globalUserId = "${sessionScope.principal.id}";
+	</script>
+	
 	<!-- 네브바 시작 -->
 	<nav class="navbar navbar-expand-md bg-dark navbar-dark">
 		<a class="navbar-brand" href="/">블로그</a>

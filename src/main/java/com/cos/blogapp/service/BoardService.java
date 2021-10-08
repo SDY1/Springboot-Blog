@@ -22,21 +22,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class BoardService {
 	private final BoardRepository boardRepository;
-	private final CommentRepository commentRepository;
-
-	@Transactional(rollbackFor = MyNotFoundException.class)
-	public void 댓글등록(int boardId, CommentSaveReqDto dto, User principal) {
-
-		Board boardEntity = boardRepository.findById(boardId)
-				.orElseThrow(() -> new MyNotFoundException("해당 게시글을 찾을 수 없습니다"));
-
-		Comment comment = new Comment();
-		comment.setContent(dto.getContent());
-		comment.setUser(principal);
-		comment.setBoard(boardEntity);
-
-		commentRepository.save(comment);
-	}
 
 	@Transactional(rollbackFor = MyAsyncNotFoundException.class)
 	public void 게시글수정(int id, User principal, BoardSaveReqDto dto) {

@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cos.blogapp.domain.board.Board;
 import com.cos.blogapp.domain.user.User;
 import com.cos.blogapp.handler.ex.MyAsyncNotFoundException;
+import com.cos.blogapp.handler.ex.MyNotFoundException;
 import com.cos.blogapp.service.BoardService;
+import com.cos.blogapp.service.CommentService;
 import com.cos.blogapp.util.Script;
 import com.cos.blogapp.web.dto.BoardSaveReqDto;
 import com.cos.blogapp.web.dto.CMRespDto;
@@ -33,13 +35,17 @@ import lombok.RequiredArgsConstructor;
 @Controller // 컴퍼넌트 스캔(스프링) IoC
 public class BoardController {
 	private final BoardService boardService;
+	private final CommentService commentService;
 	private final HttpSession session;
 
 	@PostMapping("/board/{boardId}/comment")
 	public String commentSave(@PathVariable int boardId, CommentSaveReqDto dto) {
 		User principal = (User) session.getAttribute("principal");
-		boardService.댓글등록(boardId, dto, principal);
-
+		if (principal == null) { // 로그인 안됨
+			throw new MyNotFoundException("인증이 되지 않았습니다");
+		}
+		commentService.댓글등록(boardId, dto, principal);
+		
 		return "redirect:/board/" + boardId;
 	}
 
