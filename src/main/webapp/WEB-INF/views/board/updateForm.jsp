@@ -28,7 +28,7 @@
 //		console.log(JSON.stringify(boardUpdateDto)); // 통신은 JSON으로 보내야 함
 		// JSON.stringify(자바스크립트 오브젝트) => 리턴 json문자열
 		// JSON.parse(제이슨 문자열) => 리턴 자바스크립트 함수
-		let response = await fetch("http://localhost:8080/board/" + id, { // 패치는 시간이 걸리는 작업이라 await붙여줌
+		let response = await fetch("http://localhost:8080/api/board/" + id, { // 패치는 시간이 걸리는 작업이라 await붙여줌
 			method: "put",
 			body: JSON.stringify(boardUpdateDto),
 			headers: {

@@ -38,26 +38,24 @@ public class BoardController {
 	private final CommentService commentService;
 	private final HttpSession session;
 
-	@PostMapping("/board/{boardId}/comment")
+	@PostMapping("/api/board/{boardId}/comment")
 	public String commentSave(@PathVariable int boardId, CommentSaveReqDto dto) {
 		User principal = (User) session.getAttribute("principal");
-		if (principal == null) { // 로그인 안됨
-			throw new MyNotFoundException("인증이 되지 않았습니다");
-		}
+
 		commentService.댓글등록(boardId, dto, principal);
 		
 		return "redirect:/board/" + boardId;
 	}
 
-	@PutMapping("/board/{id}") // JSON을 JAVA로 받아줌 // 무조건 바인딩리절트는 dto옆에!
+	@PutMapping("/api/board/{id}") // JSON을 JAVA로 받아줌 // 무조건 바인딩리절트는 dto옆에!
 	public @ResponseBody CMRespDto<String> update(@PathVariable int id, @Valid @RequestBody BoardSaveReqDto dto,
 			BindingResult bindingResult) {
 		User principal = (User) session.getAttribute("principal");
 		// 이러한 공통로직을 AOP처리로 따로 빼면 좋음(인증, 권한, 유효성 검사)
 		// 인증
-		if (principal == null) { // 로그인 안됨
-			throw new MyAsyncNotFoundException("인증이 되지 않았습니다");
-		}
+//		if (principal == null) { // 로그인 안됨
+//			throw new MyAsyncNotFoundException("인증이 되지 않았습니다");
+//		}
 
 		// 유효성 검사
 		if (bindingResult.hasErrors()) { // 에러가 터졌을 때
@@ -73,7 +71,7 @@ public class BoardController {
 	}
 
 	// 모델의 접근을 안하면 인증/권한 굳이 필요없음(수정에서만 막아주면 됨)
-	@GetMapping("/board/{id}/updateForm")
+	@GetMapping("/api/board/{id}/updateForm")
 	public String boardUpdateForm(@PathVariable int id, Model model) {
 		Board boardEntity = boardService.게시글수정페이지이동(id);
 		model.addAttribute("boardEntity", boardEntity); // 클라이언트에서 응답되면 데이터 사라짐
@@ -81,13 +79,10 @@ public class BoardController {
 	}
 
 	// API(AJAX)요청
-	@DeleteMapping("/board/{id}")
+	@DeleteMapping("/api/board/{id}")
 	public @ResponseBody CMRespDto<String> deleteById(@PathVariable int id) {
 		// 인증이 된 사람만 함수 접근 가능(로그인 된 사람)
 		User principal = (User) session.getAttribute("principal");
-		if (principal == null) {
-			throw new MyAsyncNotFoundException("인증이 되지 않았습니다");
-		}
 		
 		boardService.게시글삭제(id, principal);
 		
@@ -105,17 +100,17 @@ public class BoardController {
 		return "board/detail"; // ViewResolver
 	}
 
-	@PostMapping("/board") // 보드 모델에 저장할 것임
+	@PostMapping("/api/board") // 보드 모델에 저장할 것임
 	// x-www-form-urlencoded 이 타입만 받을 수 있음
 	public @ResponseBody String save(@Valid BoardSaveReqDto dto, BindingResult bindingResult) {
 		// 공통 로직 시작---------------------------------------------------
 		User principal = (User) session.getAttribute("principal");
 
 		// 인증체크
-		if (principal == null) { // 로그인 안됨
-//			return Script.back("잘못된 접근입니다");
-			return Script.href("/loginForm", "잘못된 접근입니다");
-		} // postman에서 접근 불가(로그인 인증해야 되서)
+//		if (principal == null) { // 로그인 안됨
+////			return Script.back("잘못된 접근입니다");
+//			return Script.href("/loginForm", "잘못된 접근입니다");
+//		} // postman에서 접근 불가(로그인 인증해야 되서)
 
 		if (bindingResult.hasErrors()) { // 에러가 터졌을 때
 			Map<String, String> errorMap = new HashMap<>();
