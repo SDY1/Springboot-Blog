@@ -6,12 +6,12 @@
 <div class="container">
 	<!-- 내 글이면(권한이 있으면) 수정과 삭제 버튼 보이게 if사용가능 -->
 	<c:if test="${sessionScope.principal.id == boardEntity.user.id }">
-		<a href="/board/${boardEntity.id }/updateForm" class="btn btn-warning">수정</a>
-		<button class="btn btn-danger" onclick="deleteById(${boardEntity.id})">삭제</button>
+		<a href="/api/board/${boardEntity.id }/updateForm" class="btn btn-warning">수정</a>
+		<button class="btn btn-danger" onclick="deleteBoardById(${boardEntity.id})">삭제</button>
 	</c:if>
 
 	<script>
-   			async function deleteById(id){
+   			async function deleteBoardById(id){
    				// 비동기 함수 호출 -> 비동기를 잘처리하는 방법???
    				let response = await fetch("http://localhost:8080/api/board/"+id,{
    					method: "delete"
@@ -94,7 +94,7 @@
 		</ul>
 		<script>
 			async function deleteById(commentId){
-				let response = await fetch("http://localhost:8080/comment/" + commentId, {
+				let response = await fetch("http://localhost:8080/api/comment/" + commentId, {
 					method:"delete"
 				});
 				let parseResponse = await response.json();

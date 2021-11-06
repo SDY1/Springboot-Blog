@@ -24,7 +24,7 @@ public class CommentService {
 		Comment commentEntity = commentRepository.findById(id)
 		.orElseThrow(()->new MyAsyncNotFoundException("없는 댓글 번호입니다"));
 		
-		if(principal.getId() == commentEntity.getUser().getId()) {
+		if(principal.getId() != commentEntity.getUser().getId()) {
 			throw new MyAsyncNotFoundException("해당 게시글을 삭제할 수 없는 유저입니다");
 		}
 		commentRepository.deleteById(id);
